@@ -1,3 +1,4 @@
+// protoc -I=. -I=../../vendor/github.com/gogo/protobuf --gogo_out=plugins=grpc:. --gogo_opt=paths=source_relative etcdserver.proto
 syntax = "proto2";
 package etcdserverpb;
 
@@ -11,14 +12,14 @@ option (gogoproto.unmarshaler_all) = true;
 option (gogoproto.goproto_getters_all) = false;
 
 message Request {
-	optional uint64 ID         =  1 [(gogoproto.nullable) = false];
+	optional uint64 ID         =  1 [(gogoproto.nullable) = false];// 值类型;用于优化性能，减少内存分配和垃圾回收的开销。
 	optional string Method     =  2 [(gogoproto.nullable) = false];
 	optional string Path       =  3 [(gogoproto.nullable) = false];
 	optional string Val        =  4 [(gogoproto.nullable) = false];
 	optional bool   Dir        =  5 [(gogoproto.nullable) = false];
 	optional string PrevValue  =  6 [(gogoproto.nullable) = false];
 	optional uint64 PrevIndex  =  7 [(gogoproto.nullable) = false];
-	optional bool   PrevExist  =  8 [(gogoproto.nullable) = true];
+	optional bool   PrevExist  =  8 [(gogoproto.nullable) = true];// 指针类型，可以指向nil。
 	optional int64  Expiration =  9 [(gogoproto.nullable) = false];
 	optional bool   Wait       = 10 [(gogoproto.nullable) = false];
 	optional uint64 Since      = 11 [(gogoproto.nullable) = false];

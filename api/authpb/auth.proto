@@ -1,3 +1,4 @@
+// protoc -I=. -I=../../vendor/github.com/gogo/protobuf --gogo_out=plugins=grpc:. --gogo_opt=paths=source_relative auth.proto
 syntax = "proto3";
 package authpb;
 
@@ -5,11 +6,11 @@ import "gogoproto/gogo.proto";
 
 option go_package = "go.etcd.io/etcd/api/v3/authpb";
 
-option (gogoproto.marshaler_all) = true;
-option (gogoproto.sizer_all) = true;
-option (gogoproto.unmarshaler_all) = true;
-option (gogoproto.goproto_getters_all) = false;
-option (gogoproto.goproto_enum_prefix_all) = false;
+option (gogoproto.marshaler_all) = true;// 所有消息都要实现Marshal方法
+option (gogoproto.sizer_all) = true;// 所有消息都要实现Size方法
+option (gogoproto.unmarshaler_all) = true;// 所有消息都要实现Unmarshal方法
+option (gogoproto.goproto_getters_all) = false;// 所有字段都不生成Get方法
+option (gogoproto.goproto_enum_prefix_all) = false;// 枚举值不带前缀
 
 message UserAddOptions {
   bool no_password = 1;
