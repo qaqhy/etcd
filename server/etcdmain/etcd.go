@@ -42,7 +42,7 @@ var (
 )
 
 func startEtcdOrProxyV2(args []string) {
-	grpc.EnableTracing = false
+	grpc.EnableTracing = false // EnableTracing 控制是否使用golang.org/x/net/trace包跟踪RPC。这只应在此程序发送或接收任何RPC之前设置。
 
 	cfg := newConfig()
 	defaultInitialCluster := cfg.ec.InitialCluster
@@ -202,7 +202,7 @@ func startEtcdOrProxyV2(args []string) {
 	osutil.Exit(0)
 }
 
-// startEtcd runs StartEtcd in addition to hooks needed for standalone etcd.
+// startEtcd 除了运行启动独立 etcd 所需的钩子外，还会运行 StartEtcd。
 func startEtcd(cfg *embed.Config) (<-chan struct{}, <-chan error, error) {
 	e, err := embed.StartEtcd(cfg)
 	if err != nil {
@@ -216,8 +216,8 @@ func startEtcd(cfg *embed.Config) (<-chan struct{}, <-chan error, error) {
 	return e.Server.StopNotify(), e.Err(), nil
 }
 
-// identifyDataDirOrDie returns the type of the data dir.
-// Dies if the datadir is invalid.
+// identifyDataDirOrDie 返回数据目录的类型。如果数据目录无效，则程序将终止。
+// 三种返回结果member、proxy、empty
 func identifyDataDirOrDie(lg *zap.Logger, dir string) dirType {
 	names, err := fileutil.ReadDir(dir)
 	if err != nil {

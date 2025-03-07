@@ -55,8 +55,8 @@ import (
 )
 
 const (
-	ClusterStateFlagNew      = "new"
-	ClusterStateFlagExisting = "existing"
+	ClusterStateFlagNew      = "new"      // 新集群
+	ClusterStateFlagExisting = "existing" // 已存在的集群
 
 	DefaultName                             = "default"
 	DefaultMaxSnapshots                     = 5
@@ -79,8 +79,8 @@ const (
 	DefaultDiscoveryKeepAliveTime    = 2 * time.Second
 	DefaultDiscoveryKeepAliveTimeOut = 6 * time.Second
 
-	DefaultListenPeerURLs   = "http://localhost:2380"
-	DefaultListenClientURLs = "http://localhost:2379"
+	DefaultListenPeerURLs   = "http://localhost:2380" // etcd 默认监听的peer端口
+	DefaultListenClientURLs = "http://localhost:2379" // etcd 默认监听的client端口
 
 	DefaultLogOutput = "default"
 	JournalLogOutput = "systemd/journal"
@@ -501,10 +501,21 @@ type securityConfig struct {
 
 // NewConfig creates a new Config populated with default values.
 func NewConfig() *Config {
-	lpurl, _ := url.Parse(DefaultListenPeerURLs)
-	apurl, _ := url.Parse(DefaultInitialAdvertisePeerURLs)
-	lcurl, _ := url.Parse(DefaultListenClientURLs)
-	acurl, _ := url.Parse(DefaultAdvertiseClientURLs)
+	// 这个 URL 定义了 etcd 节点监听来自其他对等节点的流量。
+	// 例如，如果设置为 http://0.0.0.0:2380，则表示 etcd 节点将在所有网络接口上的 2380 端口上监听对等节点的连接请求。
+	lpurl, _ := url.Parse(DefaultListenPeerURLs) // etcd 节点监听其他对等节点（peer）连接的地址。
+	// 这个 apurl 用于告诉集群中的其他节点，当前节点可以通过哪个地址进行对等通信。
+	// 例如，如果设置为 http://192.168.2.68:2380，则其他节点将使用这个地址来与当前节点进行对等通信。
+	// 这个地址通常是可从其他节点访问的公共 IP 地址或主机名。
+	apurl, _ := url.Parse(DefaultInitialAdvertisePeerURLs) // etcd 节点向集群中的其他节点通告的对等地址,变动通知到广播服务器地址
+	// 这个 URL 定义了 etcd 节点监听来自客户端的流量。
+	// 例如，如果设置为 http://0.0.0.0:2379,http://127.0.0.1:2379，
+	// 则表示 etcd 节点将在所有网络接口上的 2379 端口和本地回环接口上的 2379 端口上监听客户端的连接请求。
+	lcurl, _ := url.Parse(DefaultListenClientURLs) // etcd 节点监听客户端连接的地址。
+	// 这个 URL 用于告诉客户端，它们可以通过哪个地址连接到当前 etcd 节点。
+	// 例如，如果设置为 http://192.168.2.68:2379，
+	// 则客户端将使用这个地址来与当前 etcd 节点进行通信。这个地址通常是可从客户端访问的公共 IP 地址或主机名。
+	acurl, _ := url.Parse(DefaultAdvertiseClientURLs) // etcd 节点向客户端通告的地址。变动通知到广播客户端地址,发布的消息通知到订阅的客户端上
 	cfg := &Config{
 		MaxSnapFiles: DefaultMaxSnapshots,
 		MaxWalFiles:  DefaultMaxWALs,

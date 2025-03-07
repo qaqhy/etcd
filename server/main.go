@@ -27,6 +27,14 @@ import (
 	"go.etcd.io/etcd/server/v3/etcdmain"
 )
 
+//	./bin/etcd \
+//	 --name my-etcd
+//	 --initial-cluster my-etcd=http://192.168.2.68:2380 \
+//	 --listen-peer-urls http://0.0.0.0:2380 \
+//	 --initial-advertise-peer-urls http://192.168.2.68:2380 \
+//	 --listen-client-urls http://0.0.0.0:2379,http://127.0.0.1:2379 \
+//	 --advertise-client-urls http://192.168.2.68:2379 \
+//	 --data-dir ./data.tmp
 func main() {
 	etcdmain.Main(os.Args)
 }
