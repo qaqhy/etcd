@@ -123,11 +123,11 @@ func (cfg *config) parse(arguments []string) error {
 	default:
 		os.Exit(2)
 	}
-	if len(cfg.cf.flagSet.Args()) != 0 {
+	if len(cfg.cf.flagSet.Args()) != 0 { // 判断命令行输入是否存在无效标志
 		return fmt.Errorf("%q is not a valid flag", cfg.cf.flagSet.Arg(0))
 	}
 
-	if cfg.printVersion {
+	if cfg.printVersion { // 输出版本信息
 		fmt.Printf("etcd Version: %s\n", version.Version)
 		fmt.Printf("Git SHA: %s\n", version.GitSHA)
 		fmt.Printf("Go Version: %s\n", runtime.Version())
